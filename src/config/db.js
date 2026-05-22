@@ -7,6 +7,8 @@ const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:pass
 
 const pool = new Pool({
   connectionString,
+  // Configuración de SSL requerida para conectarse de manera segura a bases de datos en la nube (Render)
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 pool.on('connect', () => {

@@ -16,6 +16,8 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      - key: NODE_ENV
+        value: production
       # Requisito de la rúbrica: Conexión al servicio PostgreSQL gestionado
       - key: DATABASE_URL
         fromDatabase:
