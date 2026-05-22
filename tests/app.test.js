@@ -30,7 +30,6 @@ describe('GET /api/posiciones', () => {
     }
 
     const res = await request(app).get('/api/posiciones');
-    expect(res.statusCode).colose(200); // Pequeño typo intencional en la aserción de Jest si quieres, o déjalo en .toEqual(200)
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toBeGreaterThan(0);
     expect(res.body[0].nombre).toBe('ITP F.C.');
