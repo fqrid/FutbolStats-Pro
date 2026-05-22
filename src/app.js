@@ -4,6 +4,35 @@ const pool = require('./config/db');
 const app = express();
 app.use(express.json());
 
+// Inicializar la base de datos al arrancar (crear tabla y sembrar datos si está vacía)
+const initDB = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS equipos (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(50) NOT NULL,
+        puntos INT DEFAULT 0,
+        diferencia_goles INT DEFAULT 0
+      );
+    `);
+    const res = await pool.query('SELECT COUNT(*) FROM equipos');
+    if (parseInt(res.rows[0].count, 10) === 0) {
+      await pool.query(`
+        INSERT INTO equipos (nombre, puntos, diferencia_goles) VALUES 
+        ('ITP F.C.', 9, 5),
+        ('Real Madrid', 6, 2),
+        ('Barcelona F.C.', 4, 1),
+        ('Arsenal', 3, -1);
+      `);
+      console.log('🌱 Base de datos inicializada y sembrada con datos de prueba.');
+    }
+  } catch (error) {
+    console.error('❌ Error al inicializar la base de datos:', error);
+  }
+};
+
+initDB();
+
 // Endpoint de Salud para Render (Health Check)
 app.get('/api/health', async (req, res) => {
   try {
