@@ -31,7 +31,9 @@ const initDB = async () => {
   }
 };
 
-initDB();
+if (process.env.NODE_ENV !== 'test') {
+  initDB();
+}
 
 // Endpoint de Salud para Render (Health Check)
 app.get('/api/health', async (req, res) => {
