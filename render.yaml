@@ -1,0 +1,23 @@
+databases:
+  - name: futbolstats-db
+    databaseName: futbolstats_prod
+    user: db_admin
+    plan: free
+
+services:
+  - type: web
+    name: futbolstats-api
+    env: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    # Requisito de la rúbrica: Health Check
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 10000
+      # Requisito de la rúbrica: Conexión al servicio PostgreSQL gestionado
+      - key: DATABASE_URL
+        fromDatabase:
+          name: futbolstats-db
+          property: connectionString
