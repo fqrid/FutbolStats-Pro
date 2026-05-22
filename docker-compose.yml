@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: .
+    container_name: futbol-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      # Corrección 3: Se cambia 'localhost' por 'db_futbol' (nombre del servicio de la base de datos)
+      - DATABASE_URL=postgresql://postgres:password123@db_futbol:5432/futbol_db
+    # Corrección 4: Se define depends_on para garantizar que el contenedor de la BD se inicie antes que la API
+    depends_on:
+      - db_futbol
+
+  db_futbol:
+    image: postgres:15-alpine
+    container_name: futbol-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: futbol_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Corrección adicional: Se corrige la ruta del volumen de datos de Postgres (/var/lib/postgresql/data)
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
